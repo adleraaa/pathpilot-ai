@@ -1,32 +1,81 @@
-export default function ReportResultPage() {
+import Link from "next/link";
+
+type SearchParams = { [key: string]: string | string[] | undefined };
+
+function getValue(params: SearchParams, key: string): string {
+  const raw = params[key];
+  const value = Array.isArray(raw) ? raw[0] : raw;
+  return (value ?? "").trim();
+}
+
+function splitCourses(input: string): string[] {
+  return input
+    .split(/[,;\n]/)
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+}
+
+type RiskLevel = "Low" | "Medium" | "High";
+
+function workloadRisk(candidateCount: number): RiskLevel {
+  if (candidateCount >= 5) return "High";
+  if (candidateCount >= 3) return "Medium";
+  return "Low";
+}
+
+const riskColor: Record<RiskLevel, string> = {
+  Low: "text-green-300",
+  Medium: "text-yellow-300",
+  High: "text-red-300",
+};
+
+export default async function ReportResultPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const params = await searchParams;
+
+  const school = getValue(params, "school") || "Not provided";
+  const major = getValue(params, "major") || "Not provided";
+  const year = getValue(params, "year") || "Not provided";
+  const gpa = getValue(params, "gpa") || "Not provided";
+  const goal = getValue(params, "goal") || "Not provided";
+
+  const completedCourses = splitCourses(getValue(params, "completedCourses"));
+  const candidateCourses = splitCourses(getValue(params, "candidateCourses"));
+
+  const recommendedSchedule = candidateCourses.slice(0, 4);
+  const risk = workloadRisk(candidateCourses.length);
+
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
-        <a href="/" className="text-xl font-bold tracking-tight">
+        <Link href="/" className="text-xl font-bold tracking-tight">
           PathPilot AI
-        </a>
+        </Link>
 
         <div className="flex gap-6 text-sm text-slate-300">
-          <a href="/" className="hover:text-white">
+          <Link href="/" className="hover:text-white">
             Home
-          </a>
-          <a href="/course-report" className="hover:text-white">
+          </Link>
+          <Link href="/course-report" className="hover:text-white">
             New Report
-          </a>
+          </Link>
         </div>
       </nav>
 
       <section className="mx-auto max-w-5xl px-6 py-12">
         <div className="mb-10">
           <p className="text-sm font-medium text-slate-400">
-            AI-Generated Course Selection Report
+            Course Selection Report
           </p>
           <h1 className="mt-3 text-4xl font-bold">
             Your Course Selection Report
           </h1>
           <p className="mt-4 max-w-2xl text-slate-300">
-            This is a sample report generated from your academic background,
-            candidate courses, and academic goal.
+            This report is generated from the academic background, candidate
+            courses, and academic goal you submitted.
           </p>
         </div>
 
@@ -37,24 +86,59 @@ export default function ReportResultPage() {
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <div className="rounded-2xl bg-slate-800 p-4">
                 <p className="text-sm text-slate-400">School</p>
-                <p className="mt-2 font-medium">
-                  Stevens Institute of Technology
-                </p>
+                <p className="mt-2 font-medium">{school}</p>
               </div>
 
               <div className="rounded-2xl bg-slate-800 p-4">
                 <p className="text-sm text-slate-400">Major</p>
-                <p className="mt-2 font-medium">Computer Science</p>
+                <p className="mt-2 font-medium">{major}</p>
               </div>
 
               <div className="rounded-2xl bg-slate-800 p-4">
                 <p className="text-sm text-slate-400">Year</p>
-                <p className="mt-2 font-medium">Sophomore</p>
+                <p className="mt-2 font-medium">{year}</p>
               </div>
 
               <div className="rounded-2xl bg-slate-800 p-4">
+                <p className="text-sm text-slate-400">GPA</p>
+                <p className="mt-2 font-medium">{gpa}</p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-800 p-4 md:col-span-2">
                 <p className="text-sm text-slate-400">Main Goal</p>
-                <p className="mt-2 font-medium">Protect GPA</p>
+                <p className="mt-2 font-medium">{goal}</p>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8">
+            <h2 className="text-2xl font-semibold">Your Courses</h2>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl bg-slate-800 p-5">
+                <p className="text-sm text-slate-400">Completed Courses</p>
+                {completedCourses.length > 0 ? (
+                  <ul className="mt-3 list-inside list-disc space-y-2">
+                    {completedCourses.map((course) => (
+                      <li key={course}>{course}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-3 text-slate-400">None provided</p>
+                )}
+              </div>
+
+              <div className="rounded-2xl bg-slate-800 p-5">
+                <p className="text-sm text-slate-400">Candidate Courses</p>
+                {candidateCourses.length > 0 ? (
+                  <ul className="mt-3 list-inside list-disc space-y-2">
+                    {candidateCourses.map((course) => (
+                      <li key={course}>{course}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-3 text-slate-400">None provided</p>
+                )}
               </div>
             </div>
           </section>
@@ -64,96 +148,27 @@ export default function ReportResultPage() {
 
             <div className="mt-6 rounded-2xl bg-slate-800 p-5">
               <p className="text-sm text-slate-400">Recommended Schedule</p>
-              <ul className="mt-3 list-inside list-disc space-y-2">
-                <li>CS 382</li>
-                <li>MA 232</li>
-                <li>MGT 103</li>
-                <li>HASS Elective</li>
-              </ul>
+              {recommendedSchedule.length > 0 ? (
+                <ul className="mt-3 list-inside list-disc space-y-2">
+                  {recommendedSchedule.map((course) => (
+                    <li key={course}>{course}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-3 text-slate-400">
+                  Add candidate courses to get a recommended schedule.
+                </p>
+              )}
             </div>
 
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <div className="rounded-2xl bg-slate-800 p-4">
-                <p className="text-sm text-slate-400">Overall Risk</p>
-                <p className="mt-2 font-semibold text-yellow-300">Medium</p>
-              </div>
-
-              <div className="rounded-2xl bg-slate-800 p-4">
-                <p className="text-sm text-slate-400">Workload Risk</p>
-                <p className="mt-2 font-semibold text-yellow-300">Medium</p>
-              </div>
-
-              <div className="rounded-2xl bg-slate-800 p-4">
-                <p className="text-sm text-slate-400">GPA Risk</p>
-                <p className="mt-2 font-semibold text-yellow-300">Medium</p>
-              </div>
+            <div className="mt-6 rounded-2xl bg-slate-800 p-4">
+              <p className="text-sm text-slate-400">Workload Risk Level</p>
+              <p className={`mt-2 font-semibold ${riskColor[risk]}`}>{risk}</p>
+              <p className="mt-2 text-sm text-slate-400">
+                Based on {candidateCourses.length} candidate course
+                {candidateCourses.length === 1 ? "" : "s"} for next semester.
+              </p>
             </div>
-          </section>
-
-          <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8">
-            <h2 className="text-2xl font-semibold">Why This Schedule Works</h2>
-
-            <ul className="mt-6 space-y-4 text-slate-300">
-              <li>
-                <strong className="text-white">CS 382</strong> helps you
-                continue progressing through the Computer Science major.
-              </li>
-              <li>
-                <strong className="text-white">MA 232</strong> supports future
-                CS, AI, data science, and graduate school preparation.
-              </li>
-              <li>
-                <strong className="text-white">MGT 103</strong> helps balance
-                the workload with a less technical course.
-              </li>
-              <li>
-                <strong className="text-white">HASS Elective</strong> reduces
-                GPA pressure and keeps the schedule more manageable.
-              </li>
-            </ul>
-          </section>
-
-          <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8">
-            <h2 className="text-2xl font-semibold">Course-by-Course Analysis</h2>
-
-            <div className="mt-6 space-y-4">
-              <div className="rounded-2xl bg-slate-800 p-5">
-                <h3 className="font-semibold">CS 382</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  This course is important for CS major progress. It may involve
-                  a moderate amount of programming and conceptual work, so it
-                  should be balanced with lighter courses.
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-slate-800 p-5">
-                <h3 className="font-semibold">MA 232</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  This course supports technical preparation for AI, data
-                  science, algorithms, and graduate-level study.
-                </p>
-              </div>
-
-              <div className="rounded-2xl bg-slate-800 p-5">
-                <h3 className="font-semibold">MGT 103</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-300">
-                  This course can help balance the schedule and reduce the risk
-                  of taking too many technical courses at the same time.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8">
-            <h2 className="text-2xl font-semibold">
-              Courses to Avoid Taking Together
-            </h2>
-
-            <p className="mt-4 leading-7 text-slate-300">
-              If your priority is GPA protection, avoid taking CS 382, CS 385,
-              and a difficult math course in the same semester. This combination
-              may create a high workload and increase academic risk.
-            </p>
           </section>
 
           <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8">
@@ -164,23 +179,26 @@ export default function ReportResultPage() {
               <li>Confirm this plan with your academic advisor.</li>
               <li>Compare professor options before registration.</li>
               <li>Prepare one backup course in case of waitlist issues.</li>
-              <li>Review whether this schedule supports your transfer or graduate school goals.</li>
+              <li>
+                Review whether this schedule supports your transfer or graduate
+                school goals.
+              </li>
             </ol>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <a
+              <Link
                 href="/course-report"
                 className="rounded-xl bg-white px-6 py-3 text-center font-semibold text-slate-950 transition hover:bg-slate-200"
               >
                 Generate New Report
-              </a>
+              </Link>
 
-              <a
+              <Link
                 href="/"
                 className="rounded-xl border border-slate-700 px-6 py-3 text-center font-semibold text-white transition hover:bg-slate-800"
               >
                 Back Home
-              </a>
+              </Link>
             </div>
           </section>
 

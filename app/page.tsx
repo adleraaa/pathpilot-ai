@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -5,12 +7,12 @@ export default function Home() {
         <div className="text-xl font-bold tracking-tight">PathPilot AI</div>
 
         <div className="hidden gap-6 text-sm text-slate-300 sm:flex">
-          <a href="/" className="hover:text-white">
+          <Link href="/" className="hover:text-white">
             Home
-          </a>
-          <a href="/course-report" className="hover:text-white">
+          </Link>
+          <Link href="/course-report" className="hover:text-white">
             Course Report
-          </a>
+          </Link>
           <a href="#about" className="hover:text-white">
             About
           </a>
@@ -34,12 +36,12 @@ export default function Home() {
           </p>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-            <a
+            <Link
               href="/course-report"
               className="rounded-xl bg-white px-6 py-3 text-center font-semibold text-slate-950 transition hover:bg-slate-200"
             >
               Start Course Report
-            </a>
+            </Link>
 
             <a
               href="#about"
