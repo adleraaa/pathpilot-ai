@@ -36,6 +36,7 @@ export default function CourseReportPage() {
         <form
           method="get"
           action="/report-result"
+          autoComplete="off"
           className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-8"
         >
           <div className="grid gap-6 md:grid-cols-2">
@@ -47,7 +48,7 @@ export default function CourseReportPage() {
                 id="school"
                 name="school"
                 type="text"
-                placeholder="Stevens Institute of Technology"
+                placeholder="Sample University"
                 className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-white"
               />
             </div>
@@ -91,7 +92,7 @@ export default function CourseReportPage() {
                 id="gpa"
                 name="gpa"
                 type="text"
-                placeholder="3.65"
+                placeholder="3.50"
                 className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-white"
               />
             </div>
@@ -107,7 +108,7 @@ export default function CourseReportPage() {
             <textarea
               id="completedCourses"
               name="completedCourses"
-              placeholder="CS 115, CS 284, MA 125, MA 126..."
+              placeholder="Intro to Programming, Data Structures, Calculus I..."
               rows={4}
               className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-white"
             />
@@ -123,7 +124,7 @@ export default function CourseReportPage() {
             <textarea
               id="candidateCourses"
               name="candidateCourses"
-              placeholder="CS 382, CS 385, MA 232, MGT 103..."
+              placeholder="Algorithms, Database Systems, Linear Algebra, Software Engineering..."
               rows={4}
               className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-white"
             />
@@ -154,7 +155,7 @@ export default function CourseReportPage() {
             <textarea
               id="notes"
               name="notes"
-              placeholder="I want a manageable schedule because I will also work part-time..."
+              placeholder="I want to choose a manageable schedule while making steady progress toward my degree..."
               rows={3}
               className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-white"
             />

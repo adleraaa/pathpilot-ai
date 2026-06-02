@@ -59,7 +59,8 @@ export default function Home() {
             <div className="rounded-2xl bg-slate-800 p-4">
               <p className="text-sm text-slate-400">Recommended Schedule</p>
               <p className="mt-2 font-medium">
-                CS 382, MA 232, MGT 103, HASS Elective
+                Algorithms, Database Systems, Linear Algebra, Software
+                Engineering
               </p>
             </div>
 
