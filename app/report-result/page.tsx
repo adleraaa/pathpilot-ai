@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+import { generateAiReport } from "@/lib/ai-report";
+import { buildRuleBasedReport, type RiskLevel, type StudentInput } from "@/lib/report";
+
 type SearchParams = { [key: string]: string | string[] | undefined };
 
 function getValue(params: SearchParams, key: string): string {
@@ -13,14 +16,6 @@ function splitCourses(input: string): string[] {
     .split(/[,;\n]/)
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
-}
-
-type RiskLevel = "Low" | "Medium" | "High";
-
-function workloadRisk(candidateCount: number): RiskLevel {
-  if (candidateCount >= 5) return "High";
-  if (candidateCount >= 3) return "Medium";
-  return "Low";
 }
 
 const riskColor: Record<RiskLevel, string> = {
@@ -44,9 +39,20 @@ export default async function ReportResultPage({
 
   const completedCourses = splitCourses(getValue(params, "completedCourses"));
   const candidateCourses = splitCourses(getValue(params, "candidateCourses"));
+  const notes = getValue(params, "notes");
 
-  const recommendedSchedule = candidateCourses.slice(0, 4);
-  const risk = workloadRisk(candidateCourses.length);
+  const input: StudentInput = {
+    school,
+    major,
+    year,
+    gpa,
+    goal,
+    completedCourses,
+    candidateCourses,
+    notes,
+  };
+
+  const report = (await generateAiReport(input)) ?? buildRuleBasedReport(input);
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
@@ -148,9 +154,9 @@ export default async function ReportResultPage({
 
             <div className="mt-6 rounded-2xl bg-slate-800 p-5">
               <p className="text-sm text-slate-400">Recommended Schedule</p>
-              {recommendedSchedule.length > 0 ? (
+              {report.recommendedSchedule.length > 0 ? (
                 <ul className="mt-3 list-inside list-disc space-y-2">
-                  {recommendedSchedule.map((course) => (
+                  {report.recommendedSchedule.map((course) => (
                     <li key={course}>{course}</li>
                   ))}
                 </ul>
@@ -161,28 +167,89 @@ export default async function ReportResultPage({
               )}
             </div>
 
-            <div className="mt-6 rounded-2xl bg-slate-800 p-4">
-              <p className="text-sm text-slate-400">Workload Risk Level</p>
-              <p className={`mt-2 font-semibold ${riskColor[risk]}`}>{risk}</p>
-              <p className="mt-2 text-sm text-slate-400">
-                Based on {candidateCourses.length} candidate course
-                {candidateCourses.length === 1 ? "" : "s"} for next semester.
-              </p>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              <div className="rounded-2xl bg-slate-800 p-4">
+                <p className="text-sm text-slate-400">Overall Risk Level</p>
+                <p className={`mt-2 font-semibold ${riskColor[report.overallRisk]}`}>
+                  {report.overallRisk}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-800 p-4">
+                <p className="text-sm text-slate-400">Workload Risk</p>
+                <p className={`mt-2 font-semibold ${riskColor[report.workloadRisk]}`}>
+                  {report.workloadRisk}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-800 p-4">
+                <p className="text-sm text-slate-400">GPA Risk</p>
+                <p className={`mt-2 font-semibold ${riskColor[report.gpaRisk]}`}>
+                  {report.gpaRisk}
+                </p>
+              </div>
             </div>
+
+            <div className="mt-6 rounded-2xl bg-slate-800 p-5">
+              <p className="text-sm text-slate-400">Why This Schedule Works</p>
+              <p className="mt-2 leading-7 text-slate-200">{report.whyItWorks}</p>
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8">
+            <h2 className="text-2xl font-semibold">Course-by-Course Analysis</h2>
+
+            {report.courseAnalysis.length > 0 ? (
+              <div className="mt-6 space-y-4">
+                {report.courseAnalysis.map((item) => (
+                  <div key={item.course} className="rounded-2xl bg-slate-800 p-5">
+                    <p className="font-semibold">{item.course}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      {item.note}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-6 text-slate-400">
+                Add candidate courses to see a course-by-course breakdown.
+              </p>
+            )}
+          </section>
+
+          <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8">
+            <h2 className="text-2xl font-semibold">
+              Courses to Avoid Taking Together
+            </h2>
+
+            {report.avoidTogether.length > 0 ? (
+              <div className="mt-6 space-y-4">
+                {report.avoidTogether.map((combo) => (
+                  <div
+                    key={combo.courses.join("+")}
+                    className="rounded-2xl bg-slate-800 p-5"
+                  >
+                    <p className="font-semibold">{combo.courses.join(" + ")}</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-300">
+                      {combo.reason}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-6 text-slate-400">
+                No risky course combinations were flagged for this schedule.
+              </p>
+            )}
           </section>
 
           <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8">
             <h2 className="text-2xl font-semibold">Next Steps</h2>
 
             <ol className="mt-6 list-inside list-decimal space-y-3 text-slate-300">
-              <li>Check prerequisites in the official school catalog.</li>
-              <li>Confirm this plan with your academic advisor.</li>
-              <li>Compare professor options before registration.</li>
-              <li>Prepare one backup course in case of waitlist issues.</li>
-              <li>
-                Review whether this schedule supports your transfer or graduate
-                school goals.
-              </li>
+              {report.nextSteps.map((step) => (
+                <li key={step}>{step}</li>
+              ))}
             </ol>
 
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -203,9 +270,7 @@ export default async function ReportResultPage({
           </section>
 
           <p className="pb-10 text-sm leading-6 text-slate-500">
-            Disclaimer: PathPilot AI provides academic planning assistance only.
-            Always verify requirements with your official school catalog and
-            academic advisor.
+            Disclaimer: {report.disclaimer}
           </p>
         </div>
       </section>
