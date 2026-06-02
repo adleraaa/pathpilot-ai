@@ -1,6 +1,8 @@
 # PathPilot AI
 
-AI-powered academic planning assistant that helps college students choose their courses for the upcoming semester. Students enter their academic background and the courses they are considering, and PathPilot AI generates a personalized course-selection report with a recommended schedule, risk analysis, and concrete next steps.
+AI-powered academic planning assistant that helps college students choose their courses for the upcoming semester.
+
+Students enter their academic background and the courses they are considering, and PathPilot AI generates a personalized course-selection report with a recommended schedule, risk analysis, and concrete next steps.
 
 **Live demo:** [https://pathpilot-ai-one.vercel.app/](https://pathpilot-ai-one.vercel.app/)
 
@@ -8,11 +10,15 @@ AI-powered academic planning assistant that helps college students choose their 
 
 ## Overview
 
-PathPilot AI takes a few simple form inputs — school, major, year, GPA, completed courses, candidate courses, and a main goal — and turns them into a structured, readable report. When an AI provider is configured, it generates a tailored report through the DeepSeek API on the server. When it is not, it falls back to deterministic rule-based logic, so the app always works.
+PathPilot AI takes a few simple form inputs — school, major, year, GPA, completed courses, candidate courses, and a main goal — and turns them into a structured, readable report.
+
+When an AI provider is configured, it generates a tailored report through the DeepSeek API on the server. When it is not, it falls back to deterministic rule-based logic, so the app always works.
 
 ## Problem
 
-Course registration is stressful and easy to get wrong. Students have to balance major requirements, GPA strategy, workload, prerequisites, and longer-term goals like transferring or applying to graduate school — usually with limited advisor time and scattered information. It is hard to know whether a proposed schedule is realistic or risky before committing to it.
+Course registration is stressful and easy to get wrong. Students have to balance major requirements, GPA strategy, workload, prerequisites, and longer-term goals like transferring or applying to graduate school — usually with limited advisor time and scattered information.
+
+It is hard to know whether a proposed schedule is realistic or risky before committing to it.
 
 ## Solution
 
@@ -20,14 +26,14 @@ PathPilot AI converts those inputs into a clear course report. It recommends whi
 
 ## Features
 
-- Personalized course-selection report from a single form.
-- Recommended schedule drawn only from the student's candidate courses.
-- Risk analysis: overall risk, workload risk, and GPA risk.
-- Plain-language "Why This Schedule Works" explanation.
-- Course-by-course analysis and "courses to avoid taking together" warnings.
-- Actionable next steps and an academic disclaimer.
-- Graceful degradation: a rule-based report guarantees the app works without any API key.
-- Clean, responsive dark UI.
+- Personalized course-selection report from a single form
+- Recommended schedule drawn only from the student's candidate courses
+- Risk analysis: overall risk, workload risk, and GPA risk
+- Plain-language "Why This Schedule Works" explanation
+- Course-by-course analysis and "courses to avoid taking together" warnings
+- Actionable next steps and an academic disclaimer
+- Graceful degradation: a rule-based report guarantees the app works without any API key
+- Clean, responsive dark UI
 
 ## Tech Stack
 
@@ -113,12 +119,12 @@ You can try the demo with generic values like:
 
 ## Future Improvements
 
-- Prerequisite checking against a real course catalog.
-- Save and compare multiple schedule options.
-- Accounts so students can revisit past reports.
-- Export the report as a shareable PDF.
-- Richer GPA-impact modeling based on course difficulty.
-- Support for additional AI providers.
+- Prerequisite checking against a real course catalog
+- Save and compare multiple schedule options
+- Accounts so students can revisit past reports
+- Export the report as a shareable PDF
+- Richer GPA-impact modeling based on course difficulty
+- Support for additional AI providers
 
 ---
 
