@@ -35,7 +35,7 @@ export default function CourseReportPage() {
 
         <form
           method="get"
-          action="/report-result"
+          action="/generating"
           autoComplete="off"
           className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-8"
         >
