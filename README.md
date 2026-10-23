@@ -130,7 +130,7 @@ You can try the demo with generic values like:
 
 ## How this was built
 
-Developed between 2026-05-31 and 2026-06-08 with Claude Code (an AI coding agent) as a pair programmer; 7 of 9 commits carry a Co-Authored-By trailer. The first commit is the `create-next-app` template. The status note and this section were added on 2026-10-22, also with Claude Code.
+Built with [Claude Code](https://claude.com/claude-code), an AI coding agent. 7 of the 9 commits made before October 22, 2026 carry a Co-Authored-By: Claude trailer; a commit without the trailer is not evidence that it was written by hand. Those 9 commits are dated May 31 to June 8, 2026 (US Pacific time), and the first is the `create-next-app` template. The status note and this section were added on 2026-10-22, also with Claude Code.
 
 ---
 
