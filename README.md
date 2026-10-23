@@ -6,6 +6,8 @@ Students enter their academic background and the courses they are considering, a
 
 **Live demo:** [https://pathpilot-ai-one.vercel.app/](https://pathpilot-ai-one.vercel.app/)
 
+**Status (checked 2026-10-22):** the live demo currently returns the rule-based fallback report, not an LLM-generated one. Two requests with the sample input below both came back with the fallback report, so the LLM call is not producing a usable report on the deployed site. The page does not say which path produced a report.
+
 ---
 
 ## Overview
@@ -125,6 +127,10 @@ You can try the demo with generic values like:
 - Export the report as a shareable PDF
 - Richer GPA-impact modeling based on course difficulty
 - Support for additional AI providers
+
+## How this was built
+
+Developed between 2026-05-31 and 2026-06-08 with Claude Code (an AI coding agent) as a pair programmer; 7 of 9 commits carry a Co-Authored-By trailer. The first commit is the `create-next-app` template. The status note and this section were added on 2026-10-22, also with Claude Code.
 
 ---
 
