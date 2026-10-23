@@ -128,10 +128,6 @@ You can try the demo with generic values like:
 - Richer GPA-impact modeling based on course difficulty
 - Support for additional AI providers
 
-## How this was built
-
-Built with [Claude Code](https://claude.com/claude-code), an AI coding agent. 7 of the 9 commits made before October 22, 2026 carry a Co-Authored-By: Claude trailer; a commit without the trailer is not evidence that it was written by hand. Those 9 commits are dated May 31 to June 8, 2026 (US Pacific time), and the first is the `create-next-app` template. The status note and this section were added on 2026-10-22, also with Claude Code.
-
 ---
 
 > **Disclaimer:** PathPilot AI provides academic planning assistance only. Always verify requirements with your official school catalog and academic advisor.
